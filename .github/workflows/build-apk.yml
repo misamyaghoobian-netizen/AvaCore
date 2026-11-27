@@ -35,6 +35,19 @@ jobs:
       - name: Download AvaCore assets
         run: ./download_assets.sh
 
+      - name: Verify downloaded assets
+        run: |
+          set -e
+
+          test -s app/libs/sherpa-onnx.aar
+          test -s app/src/main/assets/tts/model_fa.onnx
+          test -s app/src/main/assets/tts/tokens_fa.txt
+          test -d app/src/main/assets/tts/espeak-ng-data
+
+          echo "All AvaCore assets are ready."
+          ls -lh app/libs/sherpa-onnx.aar
+          ls -lh app/src/main/assets/tts/model_fa.onnx
+
       - name: Build Debug APK
         run: ./gradlew --no-daemon clean assembleDebug
 
