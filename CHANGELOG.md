@@ -1,5 +1,35 @@
 # Changelog
 
+## [3.0.0](https://github.com/misamyaghoobian-netizen/AvaCore/compare/v2.0.1...v3.0.0) (2026-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* AvaCore no longer speaks English or Swedish; apps asking for those languages get LANG_NOT_SUPPORTED and fall back to another engine.
+
+### Features
+
+* expand Persian lexicon; fix docs/landing page drift ([#11](https://github.com/misamyaghoobian-netizen/AvaCore/issues/11)) ([5ac77fe](https://github.com/misamyaghoobian-netizen/AvaCore/commit/5ac77fe97565db8dfaf695fd84f537d4cb816790))
+* fix the Persian words eSpeak reads with wrong vowels ([c535adf](https://github.com/misamyaghoobian-netizen/AvaCore/commit/c535adf30cb1cf98fee53e9ffd7727f2b3d20e20))
+* fix the Persian words eSpeak reads with wrong vowels ([425a456](https://github.com/misamyaghoobian-netizen/AvaCore/commit/425a456f58d609bab36615b6d3883f9daf731cd6))
+* Goftari mode — read Persian the way it is spoken ([a7cc2b3](https://github.com/misamyaghoobian-netizen/AvaCore/commit/a7cc2b3855d9d8fb4ebfbb626687c95fd3d1d74e))
+* Goftari mode — read Persian the way it is spoken ([cfdb075](https://github.com/misamyaghoobian-netizen/AvaCore/commit/cfdb075d3cb935b1be80100595452c3d5f289523))
+* in-app voice test screen + NNAPI trial with CPU fallback (Phase 2 [#6](https://github.com/misamyaghoobian-netizen/AvaCore/issues/6), [#7](https://github.com/misamyaghoobian-netizen/AvaCore/issues/7)) ([#8](https://github.com/misamyaghoobian-netizen/AvaCore/issues/8)) ([fc6e045](https://github.com/misamyaghoobian-netizen/AvaCore/commit/fc6e045c28e3d5e5d281dd0035f7ab6bc366f40e))
+* initial production release — offline Persian TTS with signed APK pipeline ([928852e](https://github.com/misamyaghoobian-netizen/AvaCore/commit/928852e14a4e7c3797eb804cd12d87a632b4b008))
+* multi-language engine — English and Swedish alongside Persian ([#5](https://github.com/misamyaghoobian-netizen/AvaCore/issues/5)) ([bc482c0](https://github.com/misamyaghoobian-netizen/AvaCore/commit/bc482c0fdbaf23238eb237b8f978cb48e698e3b1))
+* natural pauses for verse, ellipses, dashes and lists ([2e9c744](https://github.com/misamyaghoobian-netizen/AvaCore/commit/2e9c7442c97438cb814ec0746bfbb1b9554880c1))
+* natural pauses for verse, ellipses, dashes and lists ([1437fe6](https://github.com/misamyaghoobian-netizen/AvaCore/commit/1437fe6950f1be079c3c7b7e45b6aba10fb44f51))
+* on-demand model download for English/Swedish (Phase 2 [#5](https://github.com/misamyaghoobian-netizen/AvaCore/issues/5)) ([#9](https://github.com/misamyaghoobian-netizen/AvaCore/issues/9)) ([7fe8efb](https://github.com/misamyaghoobian-netizen/AvaCore/commit/7fe8efb2acc64b215a01490e8118d0d27f790e9c))
+* Persian-only engine, spoken (Goftari) Persian by default ([fd2b02e](https://github.com/misamyaghoobian-netizen/AvaCore/commit/fd2b02e0b3490c95b33e5887bff7eda4ed2726ac))
+* richer normalizer + SSML prosody/emphasis (Phase 3 [#9](https://github.com/misamyaghoobian-netizen/AvaCore/issues/9), [#10](https://github.com/misamyaghoobian-netizen/AvaCore/issues/10)) ([#10](https://github.com/misamyaghoobian-netizen/AvaCore/issues/10)) ([8033d1d](https://github.com/misamyaghoobian-netizen/AvaCore/commit/8033d1d3b737e4887fef2cae57b44e84b0234ac4))
+
+
+### Bug Fixes
+
+* implement onIsValidVoiceName/onLoadVoice — setVoice() was silently failing ([#6](https://github.com/misamyaghoobian-netizen/AvaCore/issues/6)) ([159536a](https://github.com/misamyaghoobian-netizen/AvaCore/commit/159536a81247a3e253f07803726590196bc77732))
+* read a day number before a month name as an ordinal ([4cc27ce](https://github.com/misamyaghoobian-netizen/AvaCore/commit/4cc27cef41d61628b149420362fcb948eb1d80d8))
+* read a day number before a month name as an ordinal ([bd7111d](https://github.com/misamyaghoobian-netizen/AvaCore/commit/bd7111dc2ae53b3929d15e7890ba05d6b66a581c))
+
 ## [2.0.1](https://github.com/PlayFoundryHQ/AvaCore/compare/v2.0.0...v2.0.1) (2026-10-29)
 
 
