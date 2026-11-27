@@ -1,0 +1,63 @@
+diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro
+index bbf915c..abea1ea 100644
+--- a/app/proguard-rules.pro
++++ b/app/proguard-rules.pro
+@@ -9,3 +9,14 @@
+ 
+ # General optimizations
+ -dontwarn com.k2fsa.sherpa.onnx.**
++
++# --- Fix: crash ("app jumps out") on every default-pitch speak() in release builds ---
++# Sherpa-ONNX's native generateWithCallbackImpl looks the callback up by name via JNI:
++#   GetMethodID(cls, "invoke", "([F)Ljava/lang/Integer;")
++# R8 was renaming that method (to "b") and dropping the specialised overload, so the
++# lookup failed and the process died in native code. Keep every Kotlin function-type
++# implementation's invoke() exactly as compiled.
++-keep interface kotlin.jvm.functions.Function1 { *; }
++-keepclassmembers class * implements kotlin.jvm.functions.Function1 {
++    *** invoke(...);
++}
+diff --git a/app/src/main/java/com/github/opscalehub/avacore/service/AvaTtsService.kt b/app/src/main/java/com/github/opscalehub/avacore/service/AvaTtsService.kt
+index fae0fd2..183597f 100644
+--- a/app/src/main/java/com/github/opscalehub/avacore/service/AvaTtsService.kt
++++ b/app/src/main/java/com/github/opscalehub/avacore/service/AvaTtsService.kt
+@@ -108,35 +108,18 @@ class AvaTtsService : TextToSpeechService() {
+     }
+ 
+     /**
+-     * Tries the NNAPI execution provider first (NPU/GPU offload — faster and
+-     * lower-power than CPU on hardware that actually supports it), falling
+-     * back to plain "cpu" if NNAPI init throws. sherpa-onnx/onnxruntime does
+-     * not expose a clean "is NNAPI actually available" check ahead of time —
+-     * some devices accept the config but silently run the graph on CPU
+-     * anyway, so this only guarantees "doesn't crash," not "is faster." Real
+-     * before/after latency needs an on-device A/B, tracked as a PLAN.md
+-     * follow-up rather than assumed here.
++     * CPU only. The NNAPI execution provider was tried first before, but a native
++     * crash inside a vendor NNAPI driver cannot be caught by try/catch and kills the
++     * whole process; it also gave no measured speed-up (see PLAN.md).
+      */
+     private fun createOfflineTts(vitsConfig: OfflineTtsVitsModelConfig, cpuThreads: Int, lang: String): OfflineTts {
+-        val nnapiConfig = OfflineTtsModelConfig(
+-            vits = vitsConfig,
+-            numThreads = cpuThreads,
+-            debug = false,
+-            provider = "nnapi"
+-        )
+-        try {
+-            val tts = OfflineTts(config = OfflineTtsConfig(model = nnapiConfig))
+-            Log.d(TAG, "'$lang' engine initialized with the nnapi execution provider")
+-            return tts
+-        } catch (e: Throwable) {
+-            Log.w(TAG, "nnapi provider failed to initialize for '$lang' — falling back to cpu", e)
+-        }
+         val cpuConfig = OfflineTtsModelConfig(
+             vits = vitsConfig,
+             numThreads = cpuThreads,
+             debug = false,
+             provider = "cpu"
+         )
++        Log.d(TAG, "'$lang' engine initializing with the cpu execution provider")
+         return OfflineTts(config = OfflineTtsConfig(model = cpuConfig))
+     }
+ 

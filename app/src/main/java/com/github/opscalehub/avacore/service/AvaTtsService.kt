@@ -108,35 +108,18 @@ class AvaTtsService : TextToSpeechService() {
     }
 
     /**
-     * Tries the NNAPI execution provider first (NPU/GPU offload — faster and
-     * lower-power than CPU on hardware that actually supports it), falling
-     * back to plain "cpu" if NNAPI init throws. sherpa-onnx/onnxruntime does
-     * not expose a clean "is NNAPI actually available" check ahead of time —
-     * some devices accept the config but silently run the graph on CPU
-     * anyway, so this only guarantees "doesn't crash," not "is faster." Real
-     * before/after latency needs an on-device A/B, tracked as a PLAN.md
-     * follow-up rather than assumed here.
+     * CPU only. The NNAPI execution provider was tried first before, but a native
+     * crash inside a vendor NNAPI driver cannot be caught by try/catch and kills the
+     * whole process; it also gave no measured speed-up (see PLAN.md).
      */
     private fun createOfflineTts(vitsConfig: OfflineTtsVitsModelConfig, cpuThreads: Int, lang: String): OfflineTts {
-        val nnapiConfig = OfflineTtsModelConfig(
-            vits = vitsConfig,
-            numThreads = cpuThreads,
-            debug = false,
-            provider = "nnapi"
-        )
-        try {
-            val tts = OfflineTts(config = OfflineTtsConfig(model = nnapiConfig))
-            Log.d(TAG, "'$lang' engine initialized with the nnapi execution provider")
-            return tts
-        } catch (e: Throwable) {
-            Log.w(TAG, "nnapi provider failed to initialize for '$lang' — falling back to cpu", e)
-        }
         val cpuConfig = OfflineTtsModelConfig(
             vits = vitsConfig,
             numThreads = cpuThreads,
             debug = false,
             provider = "cpu"
         )
+        Log.d(TAG, "'$lang' engine initializing with the cpu execution provider")
         return OfflineTts(config = OfflineTtsConfig(model = cpuConfig))
     }
 
